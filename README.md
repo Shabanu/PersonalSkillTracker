@@ -3,7 +3,7 @@ An overview of my personal growth tracker and skills, growing every day.
 
 # Personal Skill Tracker (Claude Edition)
 
-A custom-built Skill Tracker developed with the assistance of Claude. This version focuses on [vul hier een specifiek kenmerk in, bijv: custom logic / simplicity].
+A custom-built Skill Tracker developed with the assistance of Claude and edited in VS Code. This version focuses on simplicity, feminine and elegance. Released on Netlify.
 
 ## Live Demo
 You can view the hosted version here: 
