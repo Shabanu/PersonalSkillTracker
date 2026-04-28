@@ -15,5 +15,5 @@ You can view the hosted version here:
 - **Clean Interface**: Focused on functionality and ease of use.
 
 ## Preview
-![Personal Tracker Shabanu image](Personal-Tracker-Shabanu-image.png)
+![Personal Tracker Shabanu image](screenshot.png)
 
