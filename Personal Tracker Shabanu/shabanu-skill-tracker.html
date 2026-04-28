@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shabanu · Skill Growth Tracker</title>
+  <link rel="icon" type="image/png" href="ribbon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #f7f0e8;
+      --beige: #ede0d0;
+      --warm-sand: #d9c8b4;
+      --old-pink: #c9a0a0;
+      --blush: #e8c4c4;
+      --dusty-rose: #a96068;
+      --brown: #6b4a3a;
+      --deep-brown: #4a3428;
+      --mocha: #9c7262;
+      --text: #3d2b22;
+      --text-muted: #b35050;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background texture ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 20%, rgba(201,160,160,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 70% at 85% 80%, rgba(217,200,180,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 60% 10%, rgba(232,196,196,0.14) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .header-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+
+    .header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--deep-brown);
+      letter-spacing: -0.01em;
+    }
+
+    .header h1 em {
+      font-style: italic;
+      color: var(--dusty-rose);
+    }
+
+    .header-subtitle {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--text);
+      letter-spacing: 0.05em;
+      font-weight: 300;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 0.8rem auto;
+      width: fit-content;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      width: 50px;
+      height: 1px;
+      background: var(--warm-sand);
+    }
+    .divider-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--old-pink);
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 1.8s ease both;
+    }
+
+    .slow-appear {
+      opacity: 0;
+      animation: fadeUp 1.8s ease both;
+    }
+
+    .slow-appear.delay-1 { animation-delay: 0.4s; }
+    .slow-appear.delay-2 { animation-delay: 0.8s; }
+    .slow-appear.delay-3 { animation-delay: 1.2s; }
+    .slow-appear.delay-4 { animation-delay: 1.6s; }
+    .slow-appear.delay-5 { animation-delay: 2s; }
+    .slow-appear.delay-6 { animation-delay: 2.4s; }
+    .slow-appear.delay-7 { animation-delay: 2.8s; }
+    .slow-appear.delay-8 { animation-delay: 3.2s; }
+    .slow-appear.delay-9 { animation-delay: 3.6s; }
+    .slow-appear.delay-10 { animation-delay: 4s; }
+    .slow-appear.delay-11 { animation-delay: 4.4s; }
+    .slow-appear.delay-12 { animation-delay: 4.8s; }
+    .slow-appear.delay-13 { animation-delay: 5.2s; }
+    .slow-appear.delay-14 { animation-delay: 5.6s; }
+    .slow-appear.delay-15 { animation-delay: 6s; }
+
+
+
+    /* ── Cards ── */
+    .card {
+      background: rgba(255,250,245,0.75);
+      border: 1px solid rgba(217,200,180,0.55);
+      border-radius: 18px;
+      padding: 2rem 2.2rem;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      margin-bottom: 1.4rem;
+      animation: fadeUp 2s ease both;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 400;
+      color: var(--deep-brown);
+      margin-bottom: 1.4rem;
+    }
+
+    .card-title span {
+      font-style: italic;
+      color: var(--dusty-rose);
+    }
+
+    /* ── Who I Am ── */
+    .who-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .who-card { grid-template-columns: 1fr; }
+    }
+
+    .who-text p {
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+    }
+
+    .who-text p strong {
+      color: var(--brown);
+      font-weight: 500;
+    }
+
+    .identity-badge {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: var(--beige);
+      border: 1px solid var(--warm-sand);
+      border-radius: 100px;
+      padding: 0.45rem 1rem;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--brown);
+      width: fit-content;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(122,92,78,0.12);
+    }
+
+    .badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--old-pink);
+      flex-shrink: 0;
+    }
+
+    /* ── Skills progress ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+    }
+
+    @media (max-width: 520px) {
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-name {
+      font-size: 0.83rem;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .skill-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--mocha);
+    }
+
+    .progress-track {
+      height: 6px;
+      background: var(--beige);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--old-pink), var(--dusty-rose));
+      transform-origin: left;
+      animation: growBar 2s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes growBar {
+      from { transform: scaleX(0); opacity: 0; }
+      to   { transform: scaleX(1); opacity: 1; }
+    }
+
+    /* ── Language tags ── */
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.2rem;
+    }
+
+    .lang-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      background: var(--deep-brown);
+      color: var(--cream);
+      border-radius: 8px;
+      padding: 0.35rem 0.75rem;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.2s;
+      cursor: default;
+    }
+
+    .lang-tag:hover {
+      background: var(--dusty-rose);
+      transform: translateY(-2px);
+    }
+
+    /* ── Learning list ── */
+    .learn-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .learn-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.9rem 1.1rem;
+      background: var(--beige);
+      border-radius: 12px;
+      border-left: 3px solid var(--old-pink);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .learn-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 18px rgba(122,92,78,0.1);
+    }
+
+    .learn-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    .learn-text strong {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--deep-brown);
+      margin-bottom: 0.2rem;
+    }
+
+    .learn-text span {
+      font-size: 0.78rem;
+      color: var(--deep-brown);
+    }
+
+    /* ── Goal ── */
+    .goal-card {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(201,160,160,0.2), rgba(232,196,196,0.1));
+      border: 1px solid rgba(201,160,160,0.4);
+    }
+
+    .goal-card::before {
+      content: '"';
+      position: absolute;
+      top: -0.5rem;
+      right: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem;
+      color: rgba(201,160,160,0.15);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .goal-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      line-height: 1.75;
+      color: var(--deep-brown);
+      position: relative;
+      z-index: 1;
+    }
+
+    .goal-milestones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.4rem;
+    }
+
+    .milestone {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(255,250,245,0.85);
+      border: 1px solid var(--blush);
+      border-radius: 100px;
+      padding: 0.38rem 0.9rem;
+      font-size: 0.76rem;
+      color: var(--brown);
+    }
+
+    .milestone::before {
+      content: '✦';
+      color: var(--old-pink);
+      font-size: 0.6rem;
+    }
+
+    /* ── Vibe banner ── */
+    .vibe-banner {
+      text-align: center;
+      padding: 2.2rem;
+      background: linear-gradient(120deg, var(--deep-brown) 0%, var(--brown) 100%);
+      border-radius: 18px;
+      margin-top: 1.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vibe-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 30% 50%, rgba(201,160,160,0.2) 0%, transparent 60%);
+    }
+
+    .vibe-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+      font-style: italic;
+      color: var(--cream);
+      position: relative;
+      z-index: 1;
+      line-height: 1.5;
+    }
+
+    .vibe-quote em {
+      color: var(--blush);
+    }
+
+    .vibe-sub {
+      margin-top: 0.8rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      color: var(--cream);
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Two-col layout ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem;
+    }
+
+    @media (max-width: 620px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--deep-brown);
+      animation: fadeUp 1.5s ease 1s both;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <p class="header-eyebrow slow-appear delay-1">Personal Growth Tracker · 2026–2027</p>
+    <h1 class="slow-appear delay-2">Shabanu <em>Aliahmad</em></h1>
+    <div class="divider slow-appear delay-3"><div class="divider-dot"></div></div>
+    <p class="header-subtitle slow-appear delay-4">Programmer · Creator · Storyteller · Lifelong Learner</p>
+  </div>
+
+  <!-- WHO I AM -->
+  <p class="section-label slow-appear delay-5">✦ Who Am I</p>
+  <div class="card slow-appear delay-6">
+    <div class="who-card">
+      <div class="who-text">
+        <p>I am a <strong>learning professional programmer</strong>, coder <br> and website creator. <br>
+          I find beauty in building things — whether that's a website, a story, or a carefully crafted design. <br> 
+          <strong>Coding is my craft</strong> <br> <strong>Learning is my compass</strong> <br> <strong>Creativity is my favourite hobby</strong>.</p>
+      </div>
+      <div class="identity-badge">
+        <div class="badge"><span class="dot"></span> Programmer & Coder</div>
+        <div class="badge"><span class="dot"></span> Website Creator</div>
+        <div class="badge"><span class="dot"></span> Visual Storyteller</div>
+        <div class="badge"><span class="dot"></span> Writer at Heart</div>
+        <div class="badge"><span class="dot"></span> Canva Enthusiast</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CURRENT SKILLS -->
+  <p class="section-label slow-appear delay-7">✦ Current Skills</p>
+  <div class="two-col">
+    <div class="card slow-appear delay-8">
+      <p class="card-title">What I'm <span>Good At</span></p>
+      <div class="skills-grid">
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Coding</span>
+            <span class="skill-pct">78%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:78%; animation-delay:0.5s"></div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Web Creation</span>
+            <span class="skill-pct">72%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:72%; animation-delay:0.7s"></div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Canva Design</span>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:85%; animation-delay:0.9s"></div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Storytelling</span>
+            <span class="skill-pct">80%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:80%; animation-delay:1.1s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card slow-appear delay-9">
+      <p class="card-title">Languages <span> I Speak Through Code</span></p>
+      <p style="font-family: 'Cormorant Garamond', serif; font-size:1rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.75;">
+      <span>"I love learning programming languages <br> each one opens a new world of possibilities."</span>
+      <div class="tags-row">
+        <span class="lang-tag">HTML</span>
+        <span class="lang-tag">CSS</span>
+        <span class="lang-tag">JavaScript</span>
+        <span class="lang-tag">Python</span>
+        <span class="lang-tag">Java</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT I'M LEARNING -->
+  <p class="section-label slow-appear delay-9">✦ What I'm Learning</p>
+  <div class="card slow-appear delay-10">
+    <p class="card-title">Currently <span>Exploring</span></p>
+    <ul class="learn-list">
+      <li class="learn-item">
+        <span class="learn-icon">🎨</span>
+        <div class="learn-text">
+          <strong>UI / UX Designing</strong>
+          <span>Learning to craft interfaces that feel as beautiful as they are intuitive — where code meets art.</span>
+        </div>
+      </li>
+      <li class="learn-item">
+        <span class="learn-icon">🤖</span>
+        <div class="learn-text">
+          <strong>Artificial Intelligence Tools</strong>
+          <span>Exploring the AI landscape — tools, models, and how to work alongside them creatively.</span>
+        </div>
+      </li>
+      <li class="learn-item">
+        <span class="learn-icon">✨</span>
+        <div class="learn-text">
+          <strong>Developing AI Skills Further</strong>
+          <span>Going deeper — not just using AI, but understanding it and building with it.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 1-YEAR GOAL -->
+  <p class="section-label slow-appear delay-12">✦ My 1-Year Goal</p>
+  <div class="card goal-card slow-appear delay-13">
+    <p class="card-title">Where <span>I Want to Be</span></p>
+    <p class="goal-text">
+      In one year, I want to have grown deeply in AI— mastering new tools,
+      building things I never thought possible. <br>
+      I would love to take my writing further— words, like code, have the power to build entire worlds. <br>
+      That way, I want to bring stories to life visually, weaving design and code together. <br> 
+    </p>
+    <div class="goal-milestones">
+      <span class="milestone">Master AI tools</span>
+      <span class="milestone">Build with AI</span>
+      <span class="milestone">Create visual stories</span>
+      <span class="milestone">Level up writing</span>
+      <span class="milestone">Grow as a UX designer</span>
+    </div>
+  </div>
+
+  <!-- VIBE BANNER -->
+  <div class="vibe-banner slow-appear delay-15">
+    <p class="vibe-quote">Elegant by Nature, <em>Creative by Choice</em>, Coding by Passion.</p>
+    <p class="vibe-sub">Crafted with intention · beige · brown · old pink</p>
+  </div>
+
+  <div class="footer slow-appear delay-16">Shabanu · Growing Every Day · 2026-2027</div>
+
+</div>
+</body>
+</html>
