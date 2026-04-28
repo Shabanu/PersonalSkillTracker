@@ -15,5 +15,5 @@ You can view the hosted version here:
 - **Clean Interface**: Focused on functionality and ease of use.
 
 ## Preview
-<img src="Personal Tracker Shabanu image.png" width="600">
+![Personal Tracker Shabanu image](Personal-Tracker-Shabanu-image.png)
 
