@@ -15,4 +15,5 @@ You can view the hosted version here:
 - **Clean Interface**: Focused on functionality and ease of use.
 
 ## Preview
-<img src="Personal_Tracker_Shabanu_image.png" alt="Skill Tracker Screenshot" width="600">
+<img src="Personal Tracker Shabanu image.png" width="600">
+
